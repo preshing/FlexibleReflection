@@ -1,6 +1,7 @@
 #include <vector>
 #include <iostream>
 #include <string>
+#include <cstddef>
 
 namespace reflect {
 
@@ -28,11 +29,11 @@ TypeDescriptor* getPrimitiveDescriptor();
 
 // A helper class to find TypeDescriptors in different ways:
 struct DefaultResolver {
-    template <typename T, typename = decltype(T::Reflection)> static char func();
+    template <typename T> static char func(decltype(&T::Reflection));
     template <typename T> static int func(...);
     template <typename T>
     struct IsReflected {
-        enum { value = (sizeof(func<T>()) == sizeof(char)) };
+        enum { value = (sizeof(func<T>(nullptr)) == sizeof(char)) };
     };
 
     // This version is called if T has a static member named "Reflection":
