@@ -49,7 +49,7 @@ struct DefaultResolver {
     }
 };
 
-// This is the base class template for finding all TypeDescriptors:
+// This is the class template for finding all TypeDescriptors:
 template <typename T>
 struct TypeResolver {
     static TypeDescriptor* get() {
@@ -156,6 +156,7 @@ struct TypeDescriptor_StdVector : TypeDescriptor {
     }
 };
 
+// Partially specialize TypeResolver<> for std::vectors:
 template <typename T>
 class TypeResolver<std::vector<T>> {
 public:
