@@ -49,7 +49,7 @@ struct DefaultResolver {
     }
 };
 
-// This is the class template for finding all TypeDescriptors:
+// This is the primary class template for finding all TypeDescriptors:
 template <typename T>
 struct TypeResolver {
     static TypeDescriptor* get() {
