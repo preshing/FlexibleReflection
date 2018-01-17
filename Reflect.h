@@ -99,14 +99,6 @@ struct TypeDescriptor_Struct : TypeDescriptor {
         typeDesc->size = sizeof(T); \
         typeDesc->members = {
 
-#define REFLECT_BEGIN_NAMESPACED_STRUCT(ns, type) \
-    reflect::TypeDescriptor_Struct type::Reflection{type::initReflection}; \
-    void type::initReflection(reflect::TypeDescriptor_Struct* typeDesc) { \
-        using T = type; \
-        typeDesc->name = #ns "::" #type; \
-        typeDesc->size = sizeof(T); \
-        typeDesc->members = {
-
 #define REFLECT_STRUCT_MEMBER(name) \
             {#name, offsetof(T, name), reflect::TypeResolver<decltype(T::name)>::get()},
 
