@@ -91,7 +91,7 @@ struct TypeDescriptor_Struct : TypeDescriptor {
     static reflect::TypeDescriptor_Struct Reflection; \
     static void initReflection(reflect::TypeDescriptor_Struct*);
 
-#define REFLECT_BEGIN_STRUCT(type) \
+#define REFLECT_STRUCT_BEGIN(type) \
     reflect::TypeDescriptor_Struct type::Reflection{type::initReflection}; \
     void type::initReflection(reflect::TypeDescriptor_Struct* typeDesc) { \
         using T = type; \
@@ -102,7 +102,7 @@ struct TypeDescriptor_Struct : TypeDescriptor {
 #define REFLECT_STRUCT_MEMBER(name) \
             {#name, offsetof(T, name), reflect::TypeResolver<decltype(T::name)>::get()},
 
-#define REFLECT_END_STRUCT() \
+#define REFLECT_STRUCT_END() \
         }; \
     }
 
