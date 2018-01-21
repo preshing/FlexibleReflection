@@ -58,7 +58,7 @@ struct TypeResolver {
 };
 
 //--------------------------------------------------------
-// Type descriptors for struct/class objects
+// Type descriptors for user-defined structs/classes
 //--------------------------------------------------------
 
 struct TypeDescriptor_Struct : TypeDescriptor {
@@ -107,7 +107,7 @@ struct TypeDescriptor_Struct : TypeDescriptor {
     }
 
 //--------------------------------------------------------
-// Type descriptors for std::vector specializations
+// Type descriptors for std::vector
 //--------------------------------------------------------
 
 struct TypeDescriptor_StdVector : TypeDescriptor {

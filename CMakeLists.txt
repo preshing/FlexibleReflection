@@ -1,4 +1,4 @@
 cmake_minimum_required(VERSION 3.1)
-project(PrimitiveReflection)
+project(FlexibleReflection)
 set(CMAKE_CXX_STANDARD 11)
-add_executable(PrimitiveReflection Main.cpp Primitives.cpp Reflect.h)
+add_executable(FlexibleReflection Main.cpp Primitives.cpp Reflect.h)

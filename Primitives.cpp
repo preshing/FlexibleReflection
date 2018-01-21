@@ -14,11 +14,10 @@ struct TypeDescriptor_Int : TypeDescriptor {
     }
 };
 
-TypeDescriptor_Int Reflection_Int;
-
 template <>
 TypeDescriptor* getPrimitiveDescriptor<int>() {
-    return &Reflection_Int;
+    static TypeDescriptor_Int typeDesc;
+    return &typeDesc;
 }
 
 //--------------------------------------------------------
@@ -33,11 +32,10 @@ struct TypeDescriptor_StdString : TypeDescriptor {
     }
 };
 
-TypeDescriptor_StdString Reflection_StdString;
-
 template <>
 TypeDescriptor* getPrimitiveDescriptor<std::string>() {
-    return &Reflection_StdString;
+    static TypeDescriptor_StdString typeDesc;
+    return &typeDesc;
 }
 
 } // namespace reflect
