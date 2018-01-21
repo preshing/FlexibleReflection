@@ -9,7 +9,7 @@ namespace reflect {
 struct TypeDescriptor_Int : TypeDescriptor {
     TypeDescriptor_Int() : TypeDescriptor{"int", sizeof(int)} {
     }
-    virtual void dump(const void* obj, int) const override {
+    virtual void dump(const void* obj, int /* unused */) const override {
         std::cout << "int{" << *(const int*) obj << "}";
     }
 };
@@ -27,7 +27,7 @@ TypeDescriptor* getPrimitiveDescriptor<int>() {
 struct TypeDescriptor_StdString : TypeDescriptor {
     TypeDescriptor_StdString() : TypeDescriptor{"std::string", sizeof(std::string)} {
     }
-    virtual void dump(const void* obj, int) const override {
+    virtual void dump(const void* obj, int /* unused */) const override {
         std::cout << "std::string{\"" << *(const std::string*) obj << "\"}";
     }
 };
