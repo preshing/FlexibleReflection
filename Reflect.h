@@ -120,11 +120,11 @@ struct TypeDescriptor_StdVector : TypeDescriptor {
         : TypeDescriptor{"std::vector<>", sizeof(std::vector<ItemType>)},
                          itemType{TypeResolver<ItemType>::get()} {
         getSize = [](const void* vecPtr) -> size_t {
-            const std::vector<ItemType>& vec = *(const std::vector<ItemType>*) vecPtr;
+            const auto& vec = *(const std::vector<ItemType>*) vecPtr;
             return vec.size();
         };
         getItem = [](const void* vecPtr, size_t index) -> const void* {
-            const std::vector<ItemType>& vec = *(const std::vector<ItemType>*) vecPtr;
+            const auto& vec = *(const std::vector<ItemType>*) vecPtr;
             return &vec[index];
         };
     }
