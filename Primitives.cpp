@@ -38,4 +38,22 @@ TypeDescriptor* getPrimitiveDescriptor<std::string>() {
     return &typeDesc;
 }
 
+//--------------------------------------------------------
+// A type descriptor for double
+//--------------------------------------------------------
+
+struct TypeDescriptor_Double : TypeDescriptor {
+    TypeDescriptor_Double() : TypeDescriptor{"double", sizeof(double)} {
+    }
+    virtual void dump(const void* obj, int /* unused */) const override {
+        std::cout << "double{" << *(const double*) obj << "}";
+    }
+};
+
+template <>
+TypeDescriptor* getPrimitiveDescriptor<double>() {
+    static TypeDescriptor_Double typeDesc;
+    return &typeDesc;
+}
+
 } // namespace reflect

@@ -1,4 +1,5 @@
 #include <vector>
+#include <memory>
 #include <iostream>
 #include <string>
 #include <cstddef>
@@ -154,6 +155,53 @@ class TypeResolver<std::vector<T>> {
 public:
     static TypeDescriptor* get() {
         static TypeDescriptor_StdVector typeDesc{(T*) nullptr};
+        return &typeDesc;
+    }
+};
+
+//--------------------------------------------------------
+// Type descriptors for std::unique_ptr
+//--------------------------------------------------------
+
+struct TypeDescriptor_StdUniquePtr : TypeDescriptor {
+    TypeDescriptor* targetType;
+    const void* (*getTarget)(const void*);
+
+    // Template constructor:
+    template <typename TargetType>
+    TypeDescriptor_StdUniquePtr(TargetType* /* dummy argument */)
+        : TypeDescriptor{"std::unique_ptr<>", sizeof(std::unique_ptr<TargetType>)},
+                         targetType{TypeResolver<TargetType>::get()} {
+        getTarget = [](const void* uniquePtrPtr) -> const void* {
+            const auto& uniquePtr = *(const std::unique_ptr<TargetType>*) uniquePtrPtr;
+            return uniquePtr.get();
+        };
+    }
+    virtual std::string getFullName() const override {
+        return std::string("std::unique_ptr<") + targetType->getFullName() + ">";
+    }
+    virtual void dump(const void* obj, int indentLevel) const override {
+        std::cout << getFullName() << "{";
+        const void* targetObj = getTarget(obj);
+        if (targetObj == nullptr) {
+            std::cout << "nullptr";
+        } else {
+            std::cout << std::endl;
+            std::cout << std::string(4 * (indentLevel + 1), ' ');
+            targetType->dump(targetObj, indentLevel + 1);
+            std::cout << std::endl;
+            std::cout << std::string(4 * indentLevel, ' ');
+        }
+        std::cout << "}";
+    }
+};
+
+// Partially specialize TypeResolver<> for std::unique_ptr<>:
+template <typename T>
+class TypeResolver<std::unique_ptr<T>> {
+public:
+    static TypeDescriptor* get() {
+        static TypeDescriptor_StdUniquePtr typeDesc{(T*) nullptr};
         return &typeDesc;
     }
 };
