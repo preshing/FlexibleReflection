@@ -23,38 +23,10 @@ struct TypeDescriptor {
 // Finding type descriptors
 //--------------------------------------------------------
 
-// Declare the function template that handles primitive types such as int, std::string, etc.:
-template <typename T>
-TypeDescriptor* getPrimitiveDescriptor();
-
-// A helper class to find TypeDescriptors in different ways:
-struct DefaultResolver {
-    template <typename T> static char func(decltype(&T::Reflection));
-    template <typename T> static int func(...);
-    template <typename T>
-    struct IsReflected {
-        enum { value = (sizeof(func<T>(nullptr)) == sizeof(char)) };
-    };
-
-    // This version is called if T has a static member named "Reflection":
-    template <typename T, typename std::enable_if<IsReflected<T>::value, int>::type = 0>
-    static TypeDescriptor* get() {
-        return &T::Reflection;
-    }
-
-    // This version is called otherwise:
-    template <typename T, typename std::enable_if<!IsReflected<T>::value, int>::type = 0>
-    static TypeDescriptor* get() {
-        return getPrimitiveDescriptor<T>();
-    }
-};
-
 // This is the primary class template for finding all TypeDescriptors:
 template <typename T>
 struct TypeResolver {
-    static TypeDescriptor* get() {
-        return DefaultResolver::get<T>();
-    }
+    static TypeDescriptor* get();
 };
 
 //--------------------------------------------------------
@@ -87,11 +59,15 @@ struct TypeDescriptor_Struct : TypeDescriptor {
 };
 
 #define REFLECT() \
-    friend struct reflect::DefaultResolver; \
+    template <typename T> friend struct reflect::TypeResolver; \
     static reflect::TypeDescriptor_Struct Reflection; \
     static void initReflection(reflect::TypeDescriptor_Struct*);
 
 #define REFLECT_STRUCT_BEGIN(type) \
+    template <> \
+    reflect::TypeDescriptor* reflect::TypeResolver<type>::get() { \
+        return &type::Reflection; \
+    } \
     reflect::TypeDescriptor_Struct type::Reflection{type::initReflection}; \
     void type::initReflection(reflect::TypeDescriptor_Struct* typeDesc) { \
         using T = type; \

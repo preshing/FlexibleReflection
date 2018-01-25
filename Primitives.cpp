@@ -15,7 +15,7 @@ struct TypeDescriptor_Int : TypeDescriptor {
 };
 
 template <>
-TypeDescriptor* getPrimitiveDescriptor<int>() {
+TypeDescriptor* TypeResolver<int>::get() {
     static TypeDescriptor_Int typeDesc;
     return &typeDesc;
 }
@@ -33,7 +33,7 @@ struct TypeDescriptor_StdString : TypeDescriptor {
 };
 
 template <>
-TypeDescriptor* getPrimitiveDescriptor<std::string>() {
+TypeDescriptor* TypeResolver<std::string>::get() {
     static TypeDescriptor_StdString typeDesc;
     return &typeDesc;
 }
