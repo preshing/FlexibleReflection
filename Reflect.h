@@ -71,8 +71,7 @@ struct TypeDescriptor_Struct : TypeDescriptor {
 
     std::vector<Member> members;
 
-    TypeDescriptor_Struct(void (*init)(TypeDescriptor_Struct*)) : TypeDescriptor{nullptr, 0} {
-        init(this);
+    TypeDescriptor_Struct() : TypeDescriptor{nullptr, 0} {
     }
     TypeDescriptor_Struct(const char* name, size_t size, const std::initializer_list<Member>& init) : TypeDescriptor{nullptr, 0}, members{init} {
     }
@@ -90,22 +89,23 @@ struct TypeDescriptor_Struct : TypeDescriptor {
 #define REFLECT() \
     friend struct reflect::DefaultResolver; \
     static reflect::TypeDescriptor_Struct Reflection; \
-    static void initReflection(reflect::TypeDescriptor_Struct*);
 
 #define REFLECT_STRUCT_BEGIN(type) \
-    reflect::TypeDescriptor_Struct type::Reflection{type::initReflection}; \
-    void type::initReflection(reflect::TypeDescriptor_Struct* typeDesc) { \
+    reflect::TypeDescriptor_Struct type::Reflection = []() \
+    { \
+        reflect::TypeDescriptor_Struct typeDesc; \
         using T = type; \
-        typeDesc->name = #type; \
-        typeDesc->size = sizeof(T); \
-        typeDesc->members = {
+        typeDesc.name = #type; \
+        typeDesc.size = sizeof(T); \
+        typeDesc.members = {
 
 #define REFLECT_STRUCT_MEMBER(name) \
             {#name, offsetof(T, name), reflect::TypeResolver<decltype(T::name)>::get()},
 
 #define REFLECT_STRUCT_END() \
         }; \
-    }
+        return typeDesc; \
+    }();
 
 //--------------------------------------------------------
 // Type descriptors for std::vector
